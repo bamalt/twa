@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Mini App Demo</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .dark-theme {
+            background-color: #333;
+            color: #fff;
+        }
+        button, input, textarea {
+            margin: 10px 0;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Telegram Mini App Demo</h1>
+    <div id="userInfo"></div>
+    <button id="themeToggle">Toggle Theme</button>
+    <form id="messageForm">
+        <textarea id="messageText" rows="4" cols="50" placeholder="Enter your message"></textarea>
+        <button type="submit">Send to Chat</button>
+    </form>
+    <div id="tgButton"></div>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+
+        // Initialize the app
+        tg.expand();
+
+        // Display user info
+        let userInfo = document.getElementById('userInfo');
+        userInfo.innerHTML = `Welcome, ${tg.initDataUnsafe.user.first_name}!`;
+
+        // Theme toggle
+        let themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+        });
+
+        // Send message to chat
+        let messageForm = document.getElementById('messageForm');
+        messageForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            let messageText = document.getElementById('messageText').value;
+            tg.sendData(messageText);
+        });
+
+        // Use native Telegram button
+        let tgButton = tg.MainButton;
+        tgButton.text = "Click Me!";
+        tgButton.onClick(() => {
+            tg.showAlert("You clicked the MainButton!");
+        });
+        tgButton.show();
+    </script>
+</body>
+</html>
