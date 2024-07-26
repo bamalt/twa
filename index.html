@@ -8,70 +8,88 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
             padding: 20px;
-            transition: all 0.3s;
+            background-color: #f0f2f5;
         }
-        .dark-theme {
-            background-color: #333;
-            color: #fff;
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        button, input, textarea {
+        h1 {
+            color: #0088cc;
+        }
+        button {
+            background-color: #0088cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
             margin: 10px 0;
-            padding: 5px;
         }
         #userInfo {
-            background-color: #f0f0f0;
-            padding: 15px;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e6f3ff;
             border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .dark-theme #userInfo {
-            background-color: #555;
-        }
-        #userInfo h2 {
-            margin-top: 0;
-        }
-        #userInfo p {
-            margin: 5px 0;
         }
     </style>
 </head>
 <body>
-    <div id="userInfo"></div>
-    <div id="tgButton"></div>
+    <div class="container">
+        <h1>Telegram Mini App Demo</h1>
+        <button onclick="showAlert()">Show Alert</button>
+        <button onclick="getUserInfo()">Get User Info</button>
+        <button onclick="showPopup()">Show Popup</button>
+        <button onclick="closeMiniApp()">Close Mini App</button>
+        <div id="userInfo"></div>
+    </div>
 
     <script>
         let tg = window.Telegram.WebApp;
 
-        // Initialize the app
         tg.expand();
 
-        // Function to get all user data
-        function getUserData() {
-            const user = tg.initDataUnsafe.user;
-            let userData = '';
-            for (let key in user) {
-                if (user.hasOwnProperty(key)) {
-                    userData += `<p><strong>${key}:</strong> ${user[key]}</p>`;
-                }
-            }
-            return userData;
+        function showAlert() {
+            tg.showAlert("This is a Telegram Mini App alert!");
         }
 
-        // Display user info
-        let userInfo = document.getElementById('userInfo');
-        userInfo.innerHTML = `
-            <h2>User Information</h2>
-            ${getUserData()}
-        `;
+        function getUserInfo() {
+            let user = tg.initDataUnsafe.user;
+            if (user) {
+                document.getElementById("userInfo").innerHTML = `
+                    <h3>User Info:</h3>
+                    <p>ID: ${user.id}</p>
+                    <p>First Name: ${user.first_name}</p>
+                    <p>Last Name: ${user.last_name || 'N/A'}</p>
+                    <p>Username: ${user.username || 'N/A'}</p>
+                `;
+            } else {
+                document.getElementById("userInfo").innerHTML = "User info not available";
+            }
+        }
 
-        // Use native Telegram button
-        let tgButton = tg.MainButton;
-        tgButton.text = "Click Me!";
-        tgButton.onClick(() => {
-            tg.showAlert("You clicked the MainButton!");
-        });
-        tgButton.show();
+        function showPopup() {
+            tg.showPopup({
+                title: "Popup Title",
+                message: "This is a popup message in Telegram Mini App",
+                buttons: [
+                    {text: "OK", type: "ok"},
+                    {text: "Cancel", type: "cancel"}
+                ]
+            }, function(buttonId) {
+                tg.showAlert("You clicked: " + buttonId);
+            });
+        }
+
+        function closeMiniApp() {
+            tg.close();
+        }
     </script>
 </body>
 </html>
