@@ -19,6 +19,21 @@
             margin: 10px 0;
             padding: 5px;
         }
+        #userInfo {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .dark-theme #userInfo {
+            background-color: #555;
+        }
+        #userInfo h2 {
+            margin-top: 0;
+        }
+        #userInfo p {
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
@@ -37,9 +52,24 @@
         // Initialize the app
         tg.expand();
 
+        // Function to get all user data
+        function getUserData() {
+            const user = tg.initDataUnsafe.user;
+            let userData = '';
+            for (let key in user) {
+                if (user.hasOwnProperty(key)) {
+                    userData += `<p><strong>${key}:</strong> ${user[key]}</p>`;
+                }
+            }
+            return userData;
+        }
+
         // Display user info
         let userInfo = document.getElementById('userInfo');
-        userInfo.innerHTML = `Welcome, ${tg.initDataUnsafe.user.first_name}!`;
+        userInfo.innerHTML = `
+            <h2>User Information</h2>
+            ${getUserData()}
+        `;
 
         // Theme toggle
         let themeToggle = document.getElementById('themeToggle');
